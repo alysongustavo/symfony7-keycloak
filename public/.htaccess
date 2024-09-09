@@ -1,0 +1,39 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+
+    # Verifica se o arquivo ou diretório existe
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Redireciona todas as requisições para o index.php
+    RewriteRule ^(.*)$ /index.php [QSA,L]
+</IfModule>
+
+# Expirar cabeçalhos para melhorar o cache do navegador
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/jpeg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType text/css "access plus 1 week"
+    ExpiresByType application/javascript "access plus 1 week"
+</IfModule>
+
+# Compressão de arquivos para melhorar a performance
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Desabilita a listagem de diretórios
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
+
+# Aumenta o limite de upload de arquivos
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 20M
+    php_value post_max_size 20M
+</IfModule>

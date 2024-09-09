@@ -1,0 +1,16 @@
+knpu_oauth2_client:
+  clients:
+    keycloak:
+      type: generic
+      client_id: '%env(KEYCLOAK_CLIENT_ID)%'
+      client_secret: '%env(KEYCLOAK_CLIENT_SECRET)%'
+      provider_class: Stevenmaguire\OAuth2\Client\Provider\Keycloak
+      redirect_route: app_users_gets
+      provider_options:
+        authServerUrl: '%env(KEYCLOAK_URL)%'
+        realm: '%env(KEYCLOAK_REALM)%'
+        urlAuthorize: '%env(KEYCLOAK_URL)%/realms/%env(KEYCLOAK_REALM)%/protocol/openid-connect/auth'
+        urlAccessToken: '%env(KEYCLOAK_URL)%/realms/%env(KEYCLOAK_REALM)%/protocol/openid-connect/token'
+        urlResourceOwnerDetails: '%env(KEYCLOAK_URL)%/realms/%env(KEYCLOAK_REALM)%/protocol/openid-connect/userinfo'
+        redirect_uri: ''
+      use_state: false  # Desabilitar a verificação do state

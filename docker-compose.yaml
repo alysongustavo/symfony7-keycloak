@@ -1,0 +1,50 @@
+version: '3.6'
+
+services:
+  # Serviço Symfony
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: microservice-users
+    restart: always
+    ports:
+      - "8080:80"  # Mapeamento da porta 80 do Apache para a porta 8080 no host
+    environment:
+      DATABASE_URL: "postgresql://user_microservice_users:computation2014@db:5432/db_microservice_users?serverVersion=15&charset=utf8"
+      RABBITMQ_URL: "amqp://guest:guest@rabbitmq:5672"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+      - rabbitmq
+
+  # Serviço PostgreSQL
+  db:
+    image: postgres:15
+    container_name: microservice-users-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: db_microservice_users
+      POSTGRES_USER: user_microservice_users
+      POSTGRES_PASSWORD: computation2014
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"  # Porta padrão do PostgreSQL
+
+  # Serviço RabbitMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: symfony-rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"  # Porta padrão do RabbitMQ (AMQP)
+      - "15672:15672"  # Porta do painel de controle do RabbitMQ
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+# Volumes persistentes
+volumes:
+  postgres_data:
+  rabbitmq_data:
